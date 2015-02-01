@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    	<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Jogo do Wall-e</title>
+		<script type="text/javascript">
+		
+			function jogador(posX, posY) {
+				this.posX = posX;
+				this.posY = posY;
+				this.score = 0;
+				this.l = 60;
+				this.a = 60;
+			}
+
+			function bichinho(posX, posY){
+				this.posX = posX;
+				this.posY = posY;
+				this.l = 50;
+				this.a = 50;
+			}
+
+			function comida(p) {
+				this.posX = Math.floor((Math.random()*700)+300);
+				this.posY = Math.floor((Math.random()*500)+150);
+				this.pontos = p;
+				this.l = 60;
+				this.a = 60;
+			}
+
+			function pegarEva(q) {
+				this.posX = Math.floor((Math.random()*700)+300);
+				this.posY = Math.floor((Math.random()*500)+150);
+				this.pontos = q;
+				this.l = 60;
+				this.a = 60;
+			}
+
+			var jogador = new jogador(300, 300);	
+			var cenoura = new comida(10);
+			var eva = new pegarEva(50);
+			var bichinho = new bichinho(700, 300);
+
+			var contador_de_cenouras = 0;
+			var contador_de_evas = 0;
+			var temporizador;
+			var temporizador2;
+			var jogoIniciado = false;
+			var temCenoura = false;
+			var temEva = false;
+			var aux;
+			var game_over=false;
+
+			function bichinhoAndando(){
+				aux=Math.random();
+				if (aux<=0.25 && bichinho.posY>=180){
+					bichinho.posY = bichinho.posY - 10;
+					document.getElementById("bichinho").style.top = bichinho.posY + "px";
+					bichinho.posY = bichinho.posY - 10;
+					document.getElementById("bichinho").style.top = bichinho.posY + "px";
+					bichinho.posY = bichinho.posY - 10;
+					document.getElementById("bichinho").style.top = bichinho.posY + "px";
+				} 
+				else {
+					if (aux>0.25 && aux<=0.5 && bichinho.posY<=460){
+						bichinho.posY = bichinho.posY + 10;
+						document.getElementById("bichinho").style.top = bichinho.posY + "px";
+						bichinho.posY = bichinho.posY + 10;
+						document.getElementById("bichinho").style.top = bichinho.posY + "px";
+						bichinho.posY = bichinho.posY + 10;
+						document.getElementById("bichinho").style.top = bichinho.posY + "px";
+						}
+					else {
+						if (aux>0.5 && aux<=0.75 && bichinho.posX>=330){
+							bichinho.posX = bichinho.posX - 10;
+							document.getElementById("bichinho").style.left = bichinho.posX + "px";
+							bichinho.posX = bichinho.posX - 10;
+							document.getElementById("bichinho").style.left = bichinho.posX + "px";
+							bichinho.posX = bichinho.posX - 10;
+							document.getElementById("bichinho").style.left = bichinho.posX + "px";
+						} else {
+							if (aux>0.75 && aux<1 && bichinho.posX<=970){
+								bichinho.posX = bichinho.posX + 10;
+								document.getElementById("bichinho").style.left = bichinho.posX + "px";
+								bichinho.posX = bichinho.posX + 10;
+								document.getElementById("bichinho").style.left = bichinho.posX + "px";
+								bichinho.posX = bichinho.posX + 10;
+								document.getElementById("bichinho").style.left = bichinho.posX + "px";
+								}
+							}
+						}
+					}
+					temporizador2 = setTimeout("bichinhoAndando()", 300);
+				}
+
+			function jogar() {
+				if(!temCenoura) {
+					contador_de_cenouras = contador_de_cenouras + 1;
+					document.getElementById('num_cenouras').innerHTML = contador_de_cenouras;
+					cenoura.posX = Math.floor((Math.random()*700)+300);
+					cenoura.posY = Math.floor((Math.random()*350)+150);
+					document.getElementById("cenoura").style.top = cenoura.posY + "px";
+					document.getElementById("cenoura").style.left = cenoura.posX + "px";
+					document.getElementById("cenoura").style.visibility = "visible";				
+					temCenoura = true;
+				} else {
+					document.getElementById("cenoura").style.visibility = "hidden";
+					temCenoura = false;
+				}
+				if (contador_de_cenouras%11==0){
+					if (!temEva){
+						contador_de_evas++;
+						eva.posX = Math.floor((Math.random()*700)+300);
+						eva.posY = Math.floor((Math.random()*350)+150);
+						document.getElementById("eva").style.top = eva.posY + "px";
+						document.getElementById("eva").style.left = eva.posX + "px";
+						document.getElementById("eva").style.visibility = "visible";
+						temEva = true;
+					} else {
+						document.getElementById("eva").style.visibility = "hidden";
+						temEva = false;
+					}
+				}
+	
+				temporizador = setTimeout("jogar()", 3000);
+			}
+			
+			
+			function iniciarJogo() {
+				if(!jogoIniciado) {
+					jogoIniciado = true;
+					jogar();
+					bichinhoAndando();
+				}
+			}
+
+			function pararJogo() {
+				clearTimeout(temporizador);
+				clearTimeout(temporizador2);
+				jogoIniciado = false;
+			}
+
+			function colisao(obj1, obj2) {
+				if(obj1.posX > obj2.posX + obj2.l)
+					return false;
+				if(obj1.posY > obj2.posY + obj2.a)
+					return false;
+				if(obj1.posX + obj1.l < obj2.posX)
+					return false;
+				if(obj1.posY + obj1.a < obj2.posY)
+					return false;
+				return true;
+			}
+
+			function teclaPressionada(e) {
+				var carac = String.fromCharCode(e.which);
+				if(carac == 'W' && jogoIniciado==true) {
+					if(jogador.posY>=160){
+						jogador.posY = jogador.posY - 10;
+						document.getElementById("jogador").style.top = jogador.posY + "px";
+					}
+				} else {
+					if(carac == 'S' && jogoIniciado==true) {
+						if(jogador.posY<=490){
+							jogador.posY = jogador.posY + 10;
+							document.getElementById("jogador").style.top = jogador.posY + "px";
+						}
+					} else {
+						if(carac == 'A' && jogoIniciado==true) {
+							if(jogador.posX>=310){
+								jogador.posX = jogador.posX - 10;
+								document.getElementById("jogador").style.left = jogador.posX + "px";
+							}
+						} else {
+							if(carac == 'D' && jogoIniciado==true) {
+								if(jogador.posX<=990){
+									jogador.posX = jogador.posX + 10;
+									document.getElementById("jogador").style.left = jogador.posX + "px";
+								}
+							}
+						}
+					}
+				}
+				document.getElementById("pos").innerHTML = "Coordenadas: " + "</br>Wall-e: x:" + jogador.posX + " y:" + jogador.posY + "</br> Planta: x:" + cenoura.posX + " y:" + cenoura.posY;
+
+				if(jogoIniciado){
+					document.getElementById("instructions").style.visibility = "hidden";
+					document.getElementById("pos").style.visibility = "visible";
+				}
+				if(colisao(jogador, cenoura) && temCenoura) {
+					jogador.score = jogador.score + cenoura.pontos;
+					document.getElementById("cenoura").style.visibility = "hidden";
+					temCenoura = false;
+					document.getElementById("score").innerHTML = "SCORE: " + jogador.score + " pts";
+	
+				}
+				if(colisao(jogador, eva) && temEva) {
+					jogador.score = jogador.score + eva.pontos;
+					document.getElementById("eva").style.visibility = "hidden";
+					temEva = false;
+					document.getElementById("score").innerHTML = "SCORE: " + jogador.score + " pts";
+	
+				}
+				if(colisao(jogador, bichinho)) {
+					game_over=true;
+				}
+				if (game_over==true){
+				jogoIniciado=false;
+				document.getElementById("GG").style.visibility = "visible";
+				document.getElementById("noob").style.visibility = "visible";
+				}
+			}
+			document.onkeydown = teclaPressionada;
+
+		</script>
+	</head>     
+    </head>
+    <body>
+		<h1 id="titulo">Save the world!</h1>
+		<button style="position: absolute; top: 150px;left: 50px;" onclick="iniciarJogo()">
+			Play
+		</button>
+		<button style="position: absolute; top: 150px;left: 155px;" onclick="pararJogo()">
+			Pause
+		</button>
+		
+		<div id="pos" style="visibility:hidden;"></div>
+		<div id="num_cenouras" style="visibility:hidden;"></div>
+		<div id="score">
+			SCORE:0
+		</div>
+		<div id="instructions" style="visibility:visible;">
+			Hit play to start!
+	    	<br>Move with W A S D
+	    </div>
+		<div id="cenoura" style="position: absolute; top: 200px;left: 600px; visibility:hidden;">
+			<img width="60px" height="60px" src="images/plant.png"/>
+		</div>
+		<div id="eva" style="position: absolute; top: 200px;left: 600px; visibility:hidden;">
+			<img width="125px" height="125px" src="images/eva.png"/>
+		</div>
+		<div id="jogador" style="position: absolute; top: 300px;left: 300px;">
+			<img width="125px" height="125px" src="images/walle.png"/>
+		</div>
+		<div id="bichinho" style="position: absolute; top: 300px;left: 700px;">
+			<img width="115px" height="115px" src="images/bichinho.png"/>
+		</div>
+	    <div id="GG" style="visibility:hidden;">
+	    	GAME OVER
+	    </div>
+	    <div id="noob" style="visibility:hidden;">
+	    	Press F5 to try again :3
+	    </div>
+    </body>
+</html>

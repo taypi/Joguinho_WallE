@@ -1,0 +1,61 @@
+#titulo{
+	width: 100%;
+	text-align: center;
+	font-family: verdana;
+	color: gray;
+}
+body{
+	background-image:url('Blue_Earth_by_sequency.jpg');
+}
+button{
+	border-radius: 5px;
+	border: 2px solid #6495ED;
+	background-color: #BCD2EE;
+	height: 30px;
+	width: 100px;
+	margin: auto;
+	text-align: center;
+}
+#score{
+	position: absolute; 
+	top: 30px;
+	left: 50px;
+	height: 30px;
+	color: white;
+	width: 200px;
+	font-family: verdana;
+	text-align: left;
+}
+#pos{
+	position: absolute; 
+	top: 60px;
+	left: 50px;
+	color: white;
+	width: 200px;
+	font-family: verdana;
+	text-align: left;
+}
+#GG{
+	position: relative;
+	width: 100%;
+	text-align: center;
+	font-family: verdana;
+	font-size: 200px;
+	color:red;
+}
+#noob {
+	position: relative;
+	width: 100%;
+	text-align: center;
+	font-family: verdana;
+	font-size: 40px;
+	color:white;
+}
+#instructions {
+	position: absolute;
+	text-align: center;
+	font-family: verdana;
+	width: 100%;
+	font-size: 20px;
+	color: gray;
+}
